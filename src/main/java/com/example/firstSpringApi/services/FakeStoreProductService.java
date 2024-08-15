@@ -89,5 +89,6 @@ public class FakeStoreProductService implements ProductService{
     public Product updateProduct (Long id, Product product)
     {
         RestTemplate restTemplate = restTemplateBuilder.build();
+        New
     }
 }
