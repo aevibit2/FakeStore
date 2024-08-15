@@ -3,7 +3,9 @@ package com.example.firstSpringApi.services;
 import com.example.firstSpringApi.dtos.FakeStoreProductDto;
 import com.example.firstSpringApi.models.Category;
 import com.example.firstSpringApi.models.Product;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpMessageConverterExtractor;
 import org.springframework.web.client.RequestCallback;
@@ -16,10 +18,12 @@ import java.util.List;
 @Service
 public class FakeStoreProductService implements ProductService{
 
+    private RestTemplateBuilder restTemplateBuilder;
     private RestTemplate restTemplate;
 
-    public FakeStoreProductService(RestTemplate restTemplate) {
+    public FakeStoreProductService(RestTemplate restTemplate, RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplate;
+        this.restTemplateBuilder = restTemplateBuilder;
     }
 
     private Product convertFakeStoreDtoToProduct(FakeStoreProductDto dto) {
@@ -68,6 +72,7 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
+    //put
     public Product replaceProduct(Long id, Product product) {
         FakeStoreProductDto fakeStoreProductDto = new FakeStoreProductDto();
         fakeStoreProductDto.setTitle(product.getTitle());
@@ -78,5 +83,11 @@ public class FakeStoreProductService implements ProductService{
         HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor = new HttpMessageConverterExtractor<>(FakeStoreProductDto.class, restTemplate.getMessageConverters());
         FakeStoreProductDto response = restTemplate.execute("https://fakestoreapi.com/products/" + id, HttpMethod.POST, requestCallback, responseExtractor);
         return convertFakeStoreDtoToProduct(response);
+    }
+
+    @Override
+    public Product updateProduct (Long id, Product product)
+    {
+        RestTemplate restTemplate = restTemplateBuilder.build();
     }
 }
